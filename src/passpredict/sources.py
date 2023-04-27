@@ -118,12 +118,8 @@ class CelestrakTLESource(PasspredictTLESource):
         """
         Download current TLEs from Celestrak and save them to a JSON file
         """
-        url = 'https://celestrak.com/NORAD/elements/gp.php'
-        params = {
-            'CATNR': satid,
-            'FORMAT': 'TLE',
-        }
-        r = httpx.get(url, params=params)
+        url = 'https://celestrak.org/NORAD/elements/gp.php?CATNR=' + str(satid) + "?FORMAT=tle"
+        r = httpx.get(url)
         if r.text.lower() in ("no tle found", "no gp data found") or r.status_code >= 300:
             raise CelestrakError(f'Celestrak TLE for satellite {satid} not found')
         tle_strings = r.text.splitlines()
